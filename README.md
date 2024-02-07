@@ -16,5 +16,5 @@ A gameOver funkció leállítja az akadály animációját, törli az ütközés
 A játék a resetGame funkció hívásával indul.
 
 Készítette:
-  Simák Balázs
+  Simák Balázs és
   Erdővölgyi Bendegúz
