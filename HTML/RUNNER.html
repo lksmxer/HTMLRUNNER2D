@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background: url('359fdd4591021fa0e6aa9521810b42a2.gif') no-repeat center center fixed; 
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        #dino {
+            position: absolute;
+            bottom: 0;
+            left: 50px;
+            width: 60px;
+            height: 50px;
+            background: url('donne.gif') no-repeat;
+            background-size: cover;
+        }
+
+        #obstacle {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 50px;
+            height: 100px;
+            background: darkgreen;
+            animation: moveObstacle 2s linear infinite;
+            border: 2px solid black;
+        }
+
+        @keyframes moveObstacle {
+            0% { right: 0; }
+            100% { right: 100%; }
+        }
+
+        .jump {
+            animation: jump 0.6s;
+        }
+
+        @keyframes jump {
+            0% { bottom: 0; }
+            50% { bottom: 200px; }
+            100% { bottom: 0; }
+        }
+
+        #score {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            color: white; 
+            text-shadow: 2px 2px 4px #000000; 
+            font-family: 'Press Start 2P', cursive; 
+            background: rgba(0, 0, 255, 0.5); 
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #title {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: 1.5em;
+            color: white;
+            text-shadow: 2px 2px 4px #000000;
+            font-family: 'Press Start 2P', cursive;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="dino"></div>
+    <div id="obstacle"></div>
+
+    <button id="jumpButton">Ugrás!</button>
+
+    <div id="score">Pontszám: 0</div>
+    <div id="title">HTML Runner 2D™</div>
+    
+
+    <script>
+        let dino = document.getElementById('dino');
+        let obstacle = document.getElementById('obstacle');
+        let scoreElement = document.getElementById('score');
+        let score = 0;
+        let checkCollision;
+
+        document.body.onkeyup = function(e) {
+            if (e.keyCode == 32) {
+                jump();
+            }
+        }
+
+        function jump() {
+            if (!dino.classList.contains("jump")) {
+                dino.classList.add("jump");
+                setTimeout(function() {
+                    dino.classList.remove("jump");
+                }, 600);
+            }
+        }
+
+        document.getElementById('jumpButton').addEventListener('click', jump);
+
+        function resetGame() {
+            obstacle.style.animation = "";
+            obstacle.style.height = `${Math.random() * 100 + 50}px`;
+            checkCollision = setInterval(function() {
+                let dinoRect = dino.getBoundingClientRect();
+                let obstacleRect = obstacle.getBoundingClientRect();
+
+                if (dinoRect.left < obstacleRect.right &&
+                    dinoRect.right > obstacleRect.left &&
+                    dinoRect.top < obstacleRect.bottom &&
+                    dinoRect.bottom > obstacleRect.top) {
+                    gameOver();
+                }
+            }, 10);
+        }
+
+        function gameOver() {
+            obstacle.style.animation = "none";
+            clearInterval(checkCollision);
+            
+
+            let questions = [
+            { question: "Az HTML egy XML jelölő nyelv.", answer: false },
+            { question: "A 'DOCTYPE' deklaráció nem része a dokumentum szerkezetének.", answer: false },
+            { question: "A DOM megismerése nem foglalja magában a webkiszolgálók elméleti működésének vizsgálatát.", answer: false },
+            { question: "A böngészőprogramoknak nincsenek beépített fejlesztő eszközeik.", answer: false },
+            { question: "A gyakorlás nem elengedhetetlen az HTML tanulásához.", answer: false },
+            { question: "A weboldal alapvető elemei magukban foglalják az elemek tulajdonságait és az egymásba ágyazást.", answer: true },
+            { question: "A címsorok és a bekezdések nem részei a weboldal tartalmának.", answer: false },
+            { question: "A blokk-szintű elemek, mint a 'div', nem ágyazhatók egymásba.", answer: false },
+            { question: "A formázó elemek, mint az 'u', 'i', 'b', nem használatosak HTML-ben.", answer: false },
+            { question: "Az egyszerű formázások beágyazott stílusokkal nem részei az HTML-nek.", answer: false },
+            { question: "Az abszolút és relatív útvonalak fogalmak kapcsolódnak a linkekhez HTML-ben.", answer: true },
+            { question: "A külső és belső linkek nem típusai a linkeknek HTML-ben.", answer: false },
+            { question: "A fájlok linkelése a weblapon a 'link' és 'script' címkék használatát jelenti.", answer: true },
+            { question: "Az 'alt' attribútum nem kapcsolódik az anchor ('a') elemhez.", answer: false },
+            { question: "Az 'img' elem és tulajdonságai nem használhatók képek kezelésére HTML-ben.", answer: false },
+            { question: "Link létrehozása egy képből nem folyamat HTML-ben.", answer: false },
+            { question: "CSS stílusokkal történő képformázás nem része az HTML gyakorlatoknak.", answer: false },
+            { question: "Az audio és video beágyazás HTML-ben az 'audio' és 'video' elemeket jelenti.", answer: true },
+            { question: "Médiaelemek stílusokkal történő formázása nem alkalmazható HTML-ben.", answer: false },
+            { question: "Listák HTML-ben, mint az 'ul' és 'ol', nem ágyazhatók egymásba.", answer: false }
+            ];
+
+            let question = questions[Math.floor(Math.random() * questions.length)];
+
+            let userAnswer = confirm(question.question);
+
+            let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
+
+            if (userAnswer === question.answer) {
+                alert("Helyes a válasz!");
+                score++;
+                scoreElement.textContent = "Ponntszám: " + score;
+                resetGame();
+
+            } else {
+                alert("Hibás a válasz, a helyes válasz " + question.answer);
+                score = 0;
+                scoreElement.textContent = "Pontszám: " + score;
+                resetGame();
+            }
+
+        }
+
+        resetGame();
+    </script>
+</body>
+</html>
