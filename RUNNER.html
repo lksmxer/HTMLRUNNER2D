@@ -32,6 +32,10 @@
             border: 2px solid black;
         }
 
+        #jumpButton {
+            font-size: 5em;
+            size: 100%;
+        }
         @keyframes moveObstacle {
             0% { right: 0; }
             100% { right: 100%; }
@@ -71,7 +75,11 @@
             font-family: 'Press Start 2P', cursive;
             padding: 10px;
         }
-
+        @media (max-width: 600px) {
+            #jumpButton {
+                font-size: 2em; /* adjust as needed */
+            }
+        }
     </style>
 </head>
 <body>
@@ -172,7 +180,7 @@
             }
 
         }
-
+        document.body.addEventListener('touchstart', jump);
         resetGame();
     </script>
 </body>
